@@ -47,39 +47,46 @@ class Bigram
 
 
 
-  public function crypt($sText) 
-  {
-      $aLettersArray = $this->mbStringToArray($sText);
-      $sResult = '';
-      for ($i=0; $i < count($aLettersArray); $i=$i+2) {
-          $sFirstLetter = $aLettersArray[$i];
-          // если количество букв нечетно, то в конце добавим пробел
-          $sSecondLetter = ' ';
-          if (isset($aLettersArray[$i+1])) {
-              $sSecondLetter = $aLettersArray[$i+1];
-          }
-          $iFirstLetterCol = $this->aLetterCache[$sFirstLetter]['col'];
-          $iFirstLetterRow = $this->aLetterCache[$sFirstLetter]['row'];
-          $iSecondLetterCol = $this->aLetterCache[$sSecondLetter]['col'];
-          $iSecondLetterRow = $this->aLetterCache[$sSecondLetter]['row'];
-          if ($iFirstLetterCol === $iSecondLetterCol) {
-              // если буквы в одном столбце
-              $sResult .= $this->aBigramTable[$this->incrementRow($iFirstLetterRow)][$iFirstLetterCol];
-              $sResult .= $this->aBigramTable[$this->incrementRow($iSecondLetterRow)][$iSecondLetterCol];
-          } elseif ($iFirstLetterRow === $iSecondLetterRow) {
-              // если буквы в одной строке
-              $sResult .= $this->aBigramTable[$iFirstLetterRow][$this->incrementCol($iFirstLetterCol)];
-              $sResult .= $this->aBigramTable[$iSecondLetterRow][$this->incrementCol($iSecondLetterCol)];
-          } else {
-              $sResult .= $this->aBigramTable[$iFirstLetterRow][$iSecondLetterCol];
-              $sResult .= $this->aBigramTable[$iSecondLetterRow][$iFirstLetterCol];
-          }
-      }
-      return $sResult;
-  }
+    /**
+     * шифрование
+     * @param string $sText текст для шифрования
+     * @return string
+     */
+    public function crypt($sText) 
+    {
+        $aLettersArray = $this->mbStringToArray($sText);
+        $sResult = '';
+        for ($i=0; $i < count($aLettersArray); $i=$i+2) {
+            $sFirstLetter = $aLettersArray[$i];
+            // если количество букв нечетно, то в конце добавим пробел
+            $sSecondLetter = ' ';
+            if (isset($aLettersArray[$i+1])) {
+                $sSecondLetter = $aLettersArray[$i+1];
+            }
+            $iFirstLetterCol = $this->aLetterCache[$sFirstLetter]['col'];
+            $iFirstLetterRow = $this->aLetterCache[$sFirstLetter]['row'];
+            $iSecondLetterCol = $this->aLetterCache[$sSecondLetter]['col'];
+            $iSecondLetterRow = $this->aLetterCache[$sSecondLetter]['row'];
+            if ($iFirstLetterCol === $iSecondLetterCol) {
+                // если буквы в одном столбце
+                $sResult .= $this->aBigramTable[$this->incrementRow($iFirstLetterRow)][$iFirstLetterCol];
+                $sResult .= $this->aBigramTable[$this->incrementRow($iSecondLetterRow)][$iSecondLetterCol];
+            } elseif ($iFirstLetterRow === $iSecondLetterRow) {
+                // если буквы в одной строке
+                $sResult .= $this->aBigramTable[$iFirstLetterRow][$this->incrementCol($iFirstLetterCol)];
+                $sResult .= $this->aBigramTable[$iSecondLetterRow][$this->incrementCol($iSecondLetterCol)];
+            } else {
+                $sResult .= $this->aBigramTable[$iFirstLetterRow][$iSecondLetterCol];
+                $sResult .= $this->aBigramTable[$iSecondLetterRow][$iFirstLetterCol];
+            }
+        }
+        return $sResult;
+    }
 
     /**
      * Расшифровывает сообщение
+     * @param string $sText текст для расшифровки
+     * @return string
      */
     public function decrypt($sText)
     {
